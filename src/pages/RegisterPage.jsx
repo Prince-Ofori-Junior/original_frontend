@@ -5,7 +5,6 @@ import { FaGoogle, FaFacebookF, FaEye, FaEyeSlash } from "react-icons/fa";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
-
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -20,35 +19,40 @@ const RegisterPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [csrfToken, setCsrfToken] = useState("");
 
-  // ✅ All URLs are now taken only from .env
-  const API_BASE = process.env.REACT_APP_API_BASE_URL;
+  // ✅ Robust API base for both environments
+  const API_BASE =
+    (process.env.REACT_APP_API_BASE_URL &&
+      process.env.REACT_APP_API_BASE_URL.replace(/\/+$/, "")) ||
+    (process.env.NODE_ENV === "production"
+      ? "https://original-backend-8b5r.onrender.com"
+      : "https://original-backend-8b5r.onrender.com");
 
-  // ✅ Fetch CSRF token from backend
+  // ✅ Fetch CSRF token safely
   useEffect(() => {
     const fetchCsrf = async () => {
       try {
         const res = await fetch(`${API_BASE}/csrf-token`, {
-          credentials: "include",
+          credentials: "include", // ensures cookies are sent
         });
         if (!res.ok) throw new Error("Failed to fetch CSRF token");
         const data = await res.json();
         setCsrfToken(data.csrfToken);
         console.log("✅ CSRF token loaded");
       } catch (err) {
-        console.warn("⚠️ Failed to fetch CSRF token:", err.message);
+        console.warn("⚠️ CSRF token fetch skipped:", err.message);
       }
     };
     fetchCsrf();
   }, [API_BASE]);
 
-  // ✅ Handle input change
+  // ✅ Form change handler
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
     setFieldErrors((prev) => ({ ...prev, [e.target.name]: "" }));
     setGeneralError("");
   };
 
-  // ✅ Submit registration form
+  // ✅ Form submit handler
   const handleSubmit = async (e) => {
     e.preventDefault();
     setGeneralError("");
@@ -73,7 +77,7 @@ const RegisterPage = () => {
         const errorsObj = {};
         let generalMsg = "";
 
-        if (Array.isArray(data.errors)) {
+        if (data.errors && Array.isArray(data.errors)) {
           data.errors.forEach((err) => {
             if (err.param) errorsObj[err.param] = err.message;
             else generalMsg = err.message || generalMsg;
@@ -133,7 +137,7 @@ const RegisterPage = () => {
             <input
               type="text"
               name="address"
-              placeholder="Address (Region, City, Street, Zip, etc)"
+              placeholder="Address (eg. Region, City, Street, Zip, etc)"
               value={form.address}
               onChange={handleChange}
               autoComplete="street-address"
@@ -175,9 +179,7 @@ const RegisterPage = () => {
           </button>
         </form>
 
-        <div className="divider">
-          <span>or</span>
-        </div>
+        <div className="divider"><span>or</span></div>
 
         <div className="social-login">
           <button className="google-btn" type="button">

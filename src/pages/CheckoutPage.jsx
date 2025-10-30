@@ -35,8 +35,9 @@ const subChannelIcons = {
   verve: verveIcon,
   cod_pickup: codIcon,
   cod: codIcon,
-  pickup: codIcon,
+  pickup: codIcon, // <-- add this
 };
+
 
 const Checkout = ({ cartItems, setCartItems }) => {
   const [deliveryDetails, setDeliveryDetails] = useState({
@@ -54,12 +55,6 @@ const Checkout = ({ cartItems, setCartItems }) => {
   const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
 
-  // ✅ Load from .env
-  const API_BASE = process.env.REACT_APP_API_BASE_URL;
-  const CALLBACK_URL =
-    process.env.REACT_APP_PAYSTACK_CALLBACK_URL ||
-    "https://original-frontend-theta.vercel.app/order-success";
-
   // ------------------- COMPUTE TOTAL -------------------
   const total = cartItems.reduce(
     (acc, item) => acc + Number(item.price) * Number(item.quantity || 1),
@@ -70,6 +65,8 @@ const Checkout = ({ cartItems, setCartItems }) => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) return navigate("/login");
+
+    const API_BASE = process.env.REACT_APP_API_BASE_URL;
 
     const fetchDelivery = async () => {
       try {
@@ -112,7 +109,7 @@ const Checkout = ({ cartItems, setCartItems }) => {
 
     fetchDelivery();
     fetchPaymentMethods();
-  }, [API_BASE, navigate]);
+  }, [navigate]);
 
   // ------------------- SAVE DELIVERY DETAILS -------------------
   const handleSaveDeliveryDetails = async () => {
@@ -124,6 +121,7 @@ const Checkout = ({ cartItems, setCartItems }) => {
       return alert("All fields are required!");
 
     try {
+      const API_BASE = process.env.REACT_APP_API_BASE_URL;
       const res = await fetch(`${API_BASE}/api/checkout/delivery`, {
         method: "PUT",
         headers: {
@@ -157,6 +155,7 @@ const Checkout = ({ cartItems, setCartItems }) => {
     setOrderLoading(true);
 
     try {
+      const API_BASE = process.env.REACT_APP_API_BASE_URL;
       let paymentMethod = selectedMainPayment.method;
       let paymentChannel = selectedSubPayment.channel;
 
@@ -174,7 +173,6 @@ const Checkout = ({ cartItems, setCartItems }) => {
         paymentChannel,
         address: deliveryDetails.address,
         email: deliveryDetails.email,
-        callback_url: CALLBACK_URL,
       };
 
       const res = await fetch(`${API_BASE}/api/orders`, {
@@ -190,10 +188,8 @@ const Checkout = ({ cartItems, setCartItems }) => {
 
       if (res.ok) {
         if (data.payment?.authorizationUrl) {
-          // ✅ Redirect to Paystack for payment
           window.location.href = data.payment.authorizationUrl;
         } else {
-          // ✅ COD (Cash on Delivery)
           localStorage.removeItem("cartItems");
           setCartItems([]);
           navigate("/order-success?cod=true", {
@@ -237,6 +233,7 @@ const Checkout = ({ cartItems, setCartItems }) => {
               <span className="payment-label">{sub.label}</span>
             </div>
 
+            {/* 🖼 Static icon per sub-channel */}
             <div className="payment-icon">
               <img
                 src={subChannelIcons[sub.channel] || visaIcon}
@@ -252,17 +249,19 @@ const Checkout = ({ cartItems, setCartItems }) => {
   return (
     <div className="checkout-page">
       <div className="checkout-rows">
+        {/* ------------------- Delivery & Payment ------------------- */}
         <div className="top-row">
           {/* Delivery Details */}
           <div className="checkout-section">
-            <div className="section-header">
-              <h2>Delivery Details</h2>
-              {!isEditing && (
-                <span className="edit-link" onClick={() => setIsEditing(true)}>
-                  Edit Details
-                </span>
-              )}
-            </div>
+
+             <div className="section-header">
+    <h2>Delivery Details</h2>
+    {!isEditing && (
+      <span className="edit-link" onClick={() => setIsEditing(true)}>
+        Edit Details
+      </span>
+    )}
+  </div>
             {deliveryLoading ? (
               <p>Loading delivery details...</p>
             ) : !isEditing ? (
@@ -271,6 +270,7 @@ const Checkout = ({ cartItems, setCartItems }) => {
                 <p><strong>Address:</strong> {deliveryDetails.address}</p><br />
                 <p><strong>Phone:</strong> {deliveryDetails.phone}</p><br />
                 <p><strong>Email:</strong> {deliveryDetails.email}</p>
+               
               </div>
             ) : (
               <div className="delivery-form">
@@ -324,7 +324,7 @@ const Checkout = ({ cartItems, setCartItems }) => {
           </div>
         </div>
 
-        {/* Items Preview */}
+        {/* ------------------- Items Preview ------------------- */}
         <div className="checkout-section items-preview">
           <h2>Items in Your Order</h2>
           <div className="items-grid">
@@ -345,41 +345,38 @@ const Checkout = ({ cartItems, setCartItems }) => {
             )}
           </div>
         </div>
+{/* ------------------- Order Summary ------------------- */}
+<div className="checkout-section summary">
+  <h2>Order Summary</h2>
 
-        {/* Order Summary */}
-        <div className="checkout-section summary">
-          <h2>Order Summary</h2>
-          <div className="summary-details">
-            <div className="summary-row">
-              <span>Item's total ({cartItems.length})</span>
-              <span>GH₵ {total.toFixed(2)}</span>
-            </div>
-            <div className="summary-row">
-              <span>Delivery fees</span>
-              <span>GH₵ 64.00</span>
-            </div>
-            <hr />
-            <div className="summary-row total-row">
-              <strong>Total</strong>
-              <strong>GH₵ {(total + 64).toFixed(2)}</strong>
-            </div>
-          </div>
+  <div className="summary-details">
+    <div className="summary-row">
+      <span>Item's total ({cartItems.length})</span>
+      <span>GH₵ {total.toFixed(2)}</span>
+    </div>
+    <div className="summary-row">
+      <span>Delivery fees</span>
+      <span>GH₵ 64.00</span>
+    </div>
+    <hr />
+    <div className="summary-row total-row">
+      <strong>Total</strong>
+      <strong>GH₵ {(total + 64).toFixed(2)}</strong>
+    </div>
+  </div>
 
-          <div className="checkout-actions">
-            <button
-              className="btn btn-primary"
-              onClick={handleConfirmOrder}
-              disabled={
-                !selectedMainPayment ||
-                !selectedSubPayment ||
-                !cartItems.length ||
-                orderLoading
-              }
-            >
-              {orderLoading ? "Processing..." : "Confirm order"}
-            </button>
-          </div>
-        </div>
+  {/* Removed promo code input section */}
+
+  <div className="checkout-actions">
+    <button
+      className="btn btn-primary"
+      onClick={handleConfirmOrder}
+      disabled={!selectedMainPayment || !selectedSubPayment || !cartItems.length || orderLoading}
+    >
+      {orderLoading ? "Processing..." : "Confirm order"}
+    </button>
+  </div>
+</div>
       </div>
     </div>
   );
