@@ -24,7 +24,7 @@ const RegisterPage = () => {
     (process.env.REACT_APP_API_BASE_URL &&
       process.env.REACT_APP_API_BASE_URL.replace(/\/+$/, "")) ||
     (process.env.NODE_ENV === "production"
-      ? "https://fosten-e-commerce-backend.onrender.com"
+      ? "https://original-backend-8b5r.onrender.com"
       : "http://localhost:8000");
 
   // ✅ Fetch CSRF token safely
