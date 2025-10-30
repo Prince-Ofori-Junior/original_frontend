@@ -9,26 +9,16 @@ const OrderSuccess = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // ✅ Dynamically choose correct API base depending on environment
-  const API_BASE =
-    process.env.REACT_APP_API_BASE_URL ||
-    (window.location.hostname.includes("vercel.app")
-      ? "https://fosten-e-commerce-backend.onrender.com"
-      : "http://localhost:8000");
-
-  const REDIRECT_HOME =
-    process.env.REACT_APP_REDIRECT_HOME ||
-    (window.location.hostname.includes("vercel.app")
-      ? "https://fosten-e-commerce-frontend-haiw2svul.vercel.app"
-      : "/");
-
-  const ORDERS_PAGE = process.env.REACT_APP_ORDERS_PAGE || "/orders";
+  // ✅ All URLs are now loaded from .env only
+  const API_BASE = process.env.REACT_APP_API_BASE_URL;
+  const REDIRECT_HOME = process.env.REACT_APP_REDIRECT_HOME;
+  const ORDERS_PAGE = process.env.REACT_APP_ORDERS_PAGE;
 
   // --- Extract URL query params ---
   const query = new URLSearchParams(location.search);
-  const reference = query.get("reference"); // Paystack transaction reference
+  const reference = query.get("reference");
   const orderId = query.get("orderId");
-  const isCOD = query.get("cod") === "true"; // Cash on Delivery flag
+  const isCOD = query.get("cod") === "true";
 
   useEffect(() => {
     const verifyOrder = async () => {

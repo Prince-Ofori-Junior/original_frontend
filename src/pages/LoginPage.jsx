@@ -15,33 +15,36 @@ const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [csrfToken, setCsrfToken] = useState("");
 
-  const API_BASE = process.env.REACT_APP_API_BASE_URL || "http://localhost:8000";
+  // ✅ All URLs now come from .env
+  const API_BASE = process.env.REACT_APP_API_BASE_URL;
+  const REDIRECT_AFTER_LOGIN =
+    process.env.REACT_APP_REDIRECT_AFTER_LOGIN || "/";
+  const CSRF_URL =
+    process.env.REACT_APP_CSRF_URL || `${API_BASE}/csrf-token`;
 
   // ✅ Redirect if already logged in
   useEffect(() => {
     if (user) {
-      const redirectPath = localStorage.getItem("redirectAfterLogin") || "/";
+      const redirectPath = localStorage.getItem("redirectAfterLogin") || REDIRECT_AFTER_LOGIN;
       localStorage.removeItem("redirectAfterLogin");
       navigate(redirectPath, { replace: true });
     }
-  }, [user, navigate]);
+  }, [user, navigate, REDIRECT_AFTER_LOGIN]);
 
   // ✅ Fetch CSRF token
   useEffect(() => {
     const fetchCsrf = async () => {
       try {
-        const res = await fetch(`${API_BASE}/csrf-token`, {
-          credentials: "include",
-        });
+        const res = await fetch(CSRF_URL, { credentials: "include" });
         if (!res.ok) throw new Error("Failed to fetch CSRF token");
         const data = await res.json();
         setCsrfToken(data.csrfToken);
       } catch (err) {
-        console.error("Failed to fetch CSRF token", err);
+        console.error("❌ Failed to fetch CSRF token", err);
       }
     };
     fetchCsrf();
-  }, [API_BASE]);
+  }, [CSRF_URL]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -58,7 +61,7 @@ const LoginPage = () => {
     try {
       const res = await login(form.email, form.password, csrfToken);
 
-      // ✅ Normalize avatar URL
+      // ✅ Normalize avatar URL (still uses env variable)
       if (res.avatar && !res.avatar.startsWith("http")) {
         const cleanPath = res.avatar.startsWith("/")
           ? res.avatar
@@ -68,8 +71,8 @@ const LoginPage = () => {
 
       setUser(res);
 
-      // ✅ Redirect user to saved path (if came from cart)
-      const redirectPath = localStorage.getItem("redirectAfterLogin") || "/";
+      // ✅ Redirect user to saved path or default
+      const redirectPath = localStorage.getItem("redirectAfterLogin") || REDIRECT_AFTER_LOGIN;
       localStorage.removeItem("redirectAfterLogin");
       navigate(redirectPath, { replace: true });
     } catch (err) {
