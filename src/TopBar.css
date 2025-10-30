@@ -1,0 +1,104 @@
+/* 🔝 Topbar */
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px; /* Matches Infobar offset */
+  z-index: 1300;
+  border-bottom: 1px solid #ccc;
+  background: var(--primary);
+  color: var(--white);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  overflow: hidden;
+}
+
+/* Left icons */
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.topbar-left a {
+  color: var(--white);
+  font-size: 1rem;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+.topbar-left a:hover {
+  color: #ffcc00;
+}
+
+/* Center text */
+.topbar-center {
+  flex: 1;
+  text-align: center;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.topbar-center p {
+  margin: 0;
+  font-size: clamp(0.8rem, 2vw, 1rem); /* Scales with screen */
+  font-weight: 500;
+}
+
+.topbar-center b i {
+  color: #ffcc00;
+  font-style: normal;
+}
+
+/* Right flag */
+.topbar-right img {
+  width: 22px;
+  height: 15px;
+  border-radius: 3px;
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.4);
+}
+
+/* 🌐 Responsive adjustments */
+@media (max-width: 768px) {
+  .topbar {
+    flex-direction: row; /* ✅ keep them side by side */
+    height: 60px;
+    padding: 0 10px;
+  }
+
+  .topbar-center p {
+    font-size: 0.8rem; /* shrink text slightly */
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  .topbar-left a {
+    font-size: 0.9rem;
+  }
+
+  .topbar-right img {
+    width: 20px;
+    height: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .topbar-center p {
+    font-size: 0.78rem;
+  }
+
+  .topbar-left a {
+    font-size: 0.9rem;
+  }
+
+  .topbar-right img {
+    width: 20px;
+    height: 13px;
+  }
+}

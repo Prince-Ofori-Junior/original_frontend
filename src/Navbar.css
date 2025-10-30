@@ -1,0 +1,159 @@
+/* === CATEGORIES + PROMO SECTION === */
+.categories-promo-section {
+  padding: 50px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: #f7f7f7;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* Main layout using Grid */
+.categories-promo-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 2fr; /* left = categories | right = promo */
+  gap: 15px;
+  align-items: stretch;
+}
+
+/* LEFT SIDE: Category Card */
+.categories-left {
+  display: flex;
+}
+
+.categories-card {
+  flex: 1;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  border-radius: 8px;
+  gap: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.categories-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+/* Individual Category Item */
+.category-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: #f9f9f9;
+  border-radius: 6px;
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.category-item:hover {
+  background: #e0f7fa;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+/* Icon */
+.cat-icon {
+  font-size: 1.1rem;
+  color: #00bcd4;
+  transition: transform 0.3s ease;
+}
+
+.category-item:hover .cat-icon {
+  transform: translateX(4px);
+}
+
+/* RIGHT SIDE: Promo */
+.promo-right {
+  display: flex;
+}
+
+.promo-card {
+  flex: 1;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+  transition: all 0.3s ease;
+}
+
+.promo-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+.promo-image-bg {
+  background-size: cover;
+  background-position: center;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Optional promo text overlay */
+.promo-text-overlay {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  color: white;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.promo-text-overlay h3 {
+  font-size: 2rem;
+  margin: 0;
+}
+
+.promo-text-overlay p {
+  font-size: 1.1rem;
+  margin-top: 5px;
+}
+
+/* === RESPONSIVE DESIGN === */
+
+/* Tablet and below */
+@media (max-width: 992px) {
+  .categories-promo-wrapper {
+    grid-template-columns: 1fr; /* stack */
+  }
+
+  .categories-left {
+    order: 2;
+  }
+
+  .promo-right {
+    order: 1;
+  }
+
+  .promo-card {
+    min-height: 250px;
+  }
+}
+
+/* Small screens (phones) */
+@media (max-width: 600px) {
+  .categories-left {
+    display: none; /* Hide categories on small phones */
+  }
+
+  .promo-card {
+    width: 100%;
+    min-height: 200px;
+  }
+
+  .promo-text-overlay h3 {
+    font-size: 1.4rem;
+  }
+
+  .promo-text-overlay p {
+    font-size: 1rem;
+  }
+}

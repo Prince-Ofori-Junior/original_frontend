@@ -1,0 +1,233 @@
+/* ======================================
+   LOGIN & REGISTER PAGES
+====================================== */
+
+.login-page,
+.register-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100%;
+  background: linear-gradient(135deg, #e0f2f1, #f3f4f6);
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.login-card,
+.register-card {
+  background: #ffffff;
+  padding: 40px 35px;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  animation: fadeInUp 0.4s ease;
+  position: relative;
+}
+
+.login-card h2,
+.register-card h2 {
+  margin-bottom: 25px;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #222;
+}
+
+/* ===== Form Inputs ===== */
+.login-form input,
+.register-form input {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 15px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  outline: none;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.login-form input:focus,
+.register-form input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 6px rgba(0, 123, 255, 0.3);
+}
+
+/* ===== Password Field Wrapper ===== */
+.password-wrapper {
+  position: relative;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.toggle-password:hover {
+  color: #000;
+}
+
+/* ===== Buttons ===== */
+.btn-primary {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background-color: #007bff;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.25s ease, transform 0.1s ease;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+  transform: translateY(-1px);
+}
+
+.btn-primary:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* ===== Error Messages ===== */
+.error-message {
+  color: #e63946;
+  font-size: 0.85rem;
+  margin-top: -8px;
+  margin-bottom: 8px;
+  text-align: left;
+}
+
+/* ===== Auth Switch Link ===== */
+.auth-switch-text {
+  font-size: 0.95rem;
+  color: #444;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.auth-switch-link {
+  color: #007bff;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  position: relative;
+  transition: color 0.2s ease;
+}
+
+.auth-switch-link::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background-color: #007bff;
+  transition: width 0.25s ease;
+}
+
+.auth-switch-link:hover {
+  color: #0056b3;
+}
+
+.auth-switch-link:hover::after {
+  width: 100%;
+}
+
+/* ===== Divider ===== */
+.divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  color: #666;
+  position: relative;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background-color: #ccc;
+  margin: 0 10px;
+}
+
+/* ===== Social Login Buttons ===== */
+.social-login {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.social-login button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: all 0.25s ease;
+}
+
+.google-btn {
+  background-color: #db4437;
+  color: #fff;
+}
+
+.google-btn:hover {
+  background-color: #c1351d;
+}
+
+.facebook-btn {
+  background-color: #3b5998;
+  color: #fff;
+}
+
+.facebook-btn:hover {
+  background-color: #2d4373;
+}
+
+/* ===== Animation ===== */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 480px) {
+  .login-card,
+  .register-card {
+    padding: 30px 20px;
+    max-width: 90%;
+  }
+
+  .login-card h2,
+  .register-card h2 {
+    font-size: 1.6rem;
+  }
+
+  .btn-primary {
+    font-size: 0.95rem;
+  }
+}

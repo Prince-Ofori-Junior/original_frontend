@@ -1,0 +1,74 @@
+.become-seller-modern-container {
+  max-width: 700px;
+  margin: 50px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.steps-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.step-card {
+  flex: 1;
+  min-width: 200px;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  transition: all 0.3s ease;
+}
+
+.step-card.active {
+  border-color: #007bff;
+  background: #f0f8ff;
+}
+
+.step-card.completed {
+  border-color: #28a745;
+  background: #d4edda;
+  color: #155724;
+}
+
+.step-card h3 {
+  margin: 15px 0;
+}
+
+.form-step {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.form-step input[type="text"],
+.form-step input[type="file"] {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.form-step button {
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+  background: #007bff;
+  color: white;
+  cursor: pointer;
+}
+
+.step-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.step-buttons button:first-child {
+  background: #6c757d;
+}

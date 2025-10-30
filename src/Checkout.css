@@ -1,0 +1,348 @@
+/* ===========================================================
+   PREMIUM MODERN CHECKOUT (Shopify × Stripe × Apple Style)
+   =========================================================== */
+
+:root {
+  --primary: #0ea76b;
+  --primary-hover: #0c8b5a;
+  --secondary: #1e293b;
+  --accent: #14b8a6;
+  --bg: #f9fafb;
+  --border: #e2e8f0;
+  --radius: 16px;
+  --shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+  --transition: all 0.35s ease;
+  --gradient: linear-gradient(135deg, #0ea76b 0%, #059669 100%);
+  --glass-bg: rgba(255, 255, 255, 0.85);
+}
+
+/* ---------------- GLOBAL ---------------- */
+.checkout-page {
+  font-family: "Inter", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--secondary);
+  min-height: 100vh;
+  padding: 3rem 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.checkout-rows {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  animation: fadeIn 0.6s ease;
+}
+
+/* ---------------- SECTIONS ---------------- */
+.checkout-section {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  border-radius: var(--radius);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: var(--shadow);
+  padding: 2rem 2.2rem;
+  transition: var(--transition);
+}
+
+.checkout-section:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.08);
+}
+
+.checkout-section h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: var(--secondary);
+  letter-spacing: -0.3px;
+}
+
+/* ---------------- DELIVERY FORM ---------------- */
+.delivery-form input,
+.delivery-form textarea {
+  width: 100%;
+  padding: 0.9rem 1.1rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  background: #fff;
+  transition: var(--transition);
+}
+
+.delivery-form input:focus,
+.delivery-form textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(14, 167, 107, 0.15);
+  outline: none;
+}
+
+/* ---------------- BUTTONS ---------------- */
+.btn-primary,
+.change-btn {
+  display: inline-block;
+  background: var(--gradient);
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 5px;
+  padding: 0.9rem 1.8rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: 0 4px 12px rgba(14, 167, 107, 0.3);
+}
+
+.btn-primary:hover,
+.change-btn:hover {
+  background: var(--primary-hover);
+  box-shadow: 0 6px 20px rgba(14, 167, 107, 0.35);
+}
+
+.btn-primary:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* ---------------- PAYMENT GROUP ---------------- */
+.payment-group {
+  margin-bottom: 1.5rem;
+}
+
+.payment-group h3 {
+  font-size: 1.1rem;
+  color: #334155;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.payment-group label {
+  display: flex;
+  align-items: center;
+  border-radius: 12px;
+  margin-bottom: 0.9rem;
+  cursor: pointer;
+  transition: var(--transition);
+  background: #fff;
+  position: relative;
+}
+
+.payment-group input[type="radio"] {
+  accent-color: var(--primary);
+  margin-right: 0.8rem;
+  transform: scale(1.2);
+}
+
+.payment-label {
+  flex: 1;
+  font-size: 1rem;
+  color: #111827;
+  font-weight: 500;
+}
+
+/* ---------------- ITEMS PREVIEW ---------------- */
+/* ---------------- ITEMS PREVIEW (Premium Upgrade) ---------------- */
+.items-preview .items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1.5rem;
+}
+
+.preview-card {
+  background: linear-gradient(145deg, #ffffff, #f9fafb);
+  border-radius: var(--radius);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.08);
+  padding: 1.2rem 1rem;
+  text-align: center;
+  transition: all 0.4s ease;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.preview-card:hover {
+  transform: translateY(-6px) scale(1.03);
+  box-shadow: 0 18px 35px rgba(0, 0, 0, 0.12);
+}
+
+.preview-img {
+  width: 90px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 16px;
+  margin-bottom: 12px;
+  transition: transform 0.3s ease;
+}
+
+.preview-card:hover .preview-img {
+  transform: scale(1.05);
+}
+
+.item-name {
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--secondary);
+  margin-bottom: 6px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.item-price {
+  color: var(--primary);
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+/* ---------------- ORDER SUMMARY ---------------- */
+.summary {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem;
+}
+
+.summary-details {
+  margin-top: 1rem;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.6rem 0;
+  font-size: 1rem;
+  color: #475569;
+}
+
+.summary-row.total-row {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--secondary);
+}
+
+.summary hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 1rem 0;
+}
+
+/* ---------------- PROMO CODE ---------------- */
+.promo-section {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 1.5rem;
+}
+
+.promo-input {
+  flex: 1;
+  padding: 0.9rem 1rem;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  font-size: 0.95rem;
+  background: #fff;
+}
+
+.promo-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.15);
+}
+
+.apply-btn {
+  background: var(--accent);
+  color: white;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  padding: 0.9rem 1.3rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.apply-btn:hover {
+  background: #0d9488;
+  transform: translateY(-2px);
+}
+
+/* ---------------- FOOTER BUTTON ---------------- */
+.checkout-actions {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+/* ---------------- ANIMATIONS ---------------- */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------------- RESPONSIVE ---------------- */
+@media (max-width: 1024px) {
+  .checkout-section {
+    padding: 1.6rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .checkout-page {
+    padding: 1.2rem 0.8rem;
+  }
+
+  .checkout-section h2 {
+    font-size: 1.35rem;
+  }
+
+  .btn-primary {
+    width: 100%;
+  }
+
+  .promo-section {
+    flex-direction: column;
+  }
+
+  .apply-btn {
+    width: 100%;
+  }
+}
+
+
+
+.delivery-details-wrapper {
+  position: relative; /* Needed to position the edit link */
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.1rem;
+}
+
+.edit-link {
+  color: var(--primary);
+  font-weight: 400;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 1.0rem;
+  transition: color 0.3s;
+}
+
+.edit-link:hover {
+  color: var(--primary-hover);
+}
+

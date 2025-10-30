@@ -1,0 +1,227 @@
+/* =====================================================
+   PREMIUM ORDER SUCCESS PAGE STYLES
+   ===================================================== */
+
+/* ---------- Global Layout ---------- */
+.order-status {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 4rem 2rem;
+  background: radial-gradient(circle at top left, #f5f7fa, #e6ebf1, #f0f2f5);
+  text-align: center;
+  animation: fadeIn 0.6s ease-in-out;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle background glow */
+.order-status::before {
+  content: "";
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(37,99,235,0.08), transparent 70%);
+  top: -100px;
+  right: -100px;
+  filter: blur(100px);
+  z-index: 0;
+}
+
+/* ---------- Animations ---------- */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 0 rgba(37,99,235, 0); }
+  50% { box-shadow: 0 0 30px rgba(37,99,235, 0.3); }
+}
+
+/* ---------- Status Variants ---------- */
+.order-status.success {
+  color: #111827;
+}
+
+.order-status.error {
+  color: #dc2626;
+}
+
+.order-status.loading {
+  color: #4b5563;
+}
+
+/* ---------- Icons ---------- */
+.success-icon,
+.error-icon {
+  font-size: 4rem;
+  margin-bottom: 1.2rem;
+  z-index: 1;
+}
+
+.success-icon {
+  color: #10b981;
+  animation: pulseGlow 2.5s infinite ease-in-out;
+}
+
+.error-icon {
+  color: #ef4444;
+}
+
+/* ---------- Spinner ---------- */
+.spinner {
+  width: 70px;
+  height: 70px;
+  border: 5px solid rgba(229,231,235,0.6);
+  border-top: 5px solid #2563eb;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1.8rem;
+}
+
+/* ---------- Typography ---------- */
+h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.5px;
+  z-index: 1;
+}
+
+p {
+  font-size: 1.05rem;
+  color: #374151;
+  line-height: 1.8;
+  max-width: 600px;
+  margin: 0 auto 1rem;
+}
+
+.success-message {
+  color: #059669;
+  font-weight: 500;
+  text-shadow: 0 0 8px rgba(16,185,129,0.15);
+}
+
+.no-details {
+  color: #6b7280;
+  font-style: italic;
+}
+
+/* ---------- Order Summary ---------- */
+.order-summary {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  padding: 1.8rem 2.2rem;
+  margin: 2rem 0;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  text-align: left;
+  max-width: 450px;
+  width: 100%;
+  border: 1px solid rgba(229, 231, 235, 0.5);
+  transition: transform 0.3s ease;
+  z-index: 1;
+}
+
+.order-summary:hover {
+  transform: translateY(-2px);
+}
+
+.order-summary h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #111827;
+  border-bottom: 2px solid #f3f4f6;
+  padding-bottom: 0.6rem;
+}
+
+.order-summary p {
+  font-size: 0.97rem;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-block;
+  padding: 0.85rem 1.8rem;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+  letter-spacing: 0.3px;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #fff;
+  box-shadow: 0 8px 24px rgba(37,99,235,0.3);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #1e40af, #1d4ed8);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(37,99,235,0.4);
+}
+
+.btn-secondary {
+  background: #f9fafb;
+  color: #111827;
+  border: 1px solid #e5e7eb;
+}
+
+.btn-secondary:hover {
+  background: #f3f4f6;
+  transform: translateY(-2px);
+}
+
+.order-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+  z-index: 1;
+}
+
+/* ---------- Redirect Note ---------- */
+.redirect-note {
+  font-size: 0.95rem;
+  color: #6b7280;
+  margin-top: 1.2rem;
+  max-width: 550px;
+  z-index: 1;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+  .order-summary {
+    max-width: 100%;
+    padding: 1.4rem 1.6rem;
+  }
+
+  .btn {
+    width: 100%;
+    max-width: 330px;
+  }
+
+  h2 {
+    font-size: 1.6rem;
+  }
+
+  p {
+    font-size: 0.98rem;
+  }
+}

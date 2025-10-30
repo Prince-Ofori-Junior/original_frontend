@@ -1,0 +1,640 @@
+:root {
+  --primary: #0a8e03;
+  --dark: #000;
+  --light: #d9d9d9;
+  --text: #000;
+  --white: #fff;
+}
+
+/* Reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  color: var(--text);
+  line-height: 1.6;
+  background: #fff;
+  padding-top: calc(50px + 90px + 80px);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* 🔽 Navbar */
+.navbar {
+  background: var(--white);
+  color: var(--dark);
+  position: fixed;
+  top: 140px;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  z-index: 1000;
+}
+
+.nav-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  height: 100%;
+}
+
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: var(--white);
+  cursor: pointer;
+  margin-right: auto;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  gap: 5rem;
+  justify-content: center;
+}
+
+.nav-links li {
+  position: relative;
+}
+
+.nav-links a {
+  color: black;
+}
+
+.nav-links .active {
+  border-bottom: 2px solid var(--primary);
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  list-style: none;
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: 0 4px 8px rgba(218, 27, 27, 0.1);
+  padding: 0.5rem 0;
+  min-width: 180px;
+  z-index: 1000;
+}
+
+.dropdown-menu li a {
+  display: block;
+  padding: 0.6rem 1rem;
+  color: #333;
+  transition: background 0.2s;
+  text-align: center;
+}
+
+.dropdown-menu li a:hover {
+  background: rgba(0, 0, 0, 0.37);
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+
+.section-title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  color: var(--dark);
+}
+
+/* Tablet */
+@media (max-width: 992px) {
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 0.8rem;
+  }
+
+  .card-body h3 {
+    font-size: 0.9rem;
+  }
+
+  .price {
+    font-size: 1rem;
+  }
+
+  .card-body .btn {
+    padding: 0.7rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* 🔽 About Section */
+.about-snippet {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.about-snippet img {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  border-radius: 10px;
+}
+
+.about-snippet h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: var(--primary);
+  text-align: center;
+}
+
+.about-snippet p {
+  font-size: 1rem;
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* 📱 On tablets & smaller, stack image + text */
+@media (max-width: 992px) {
+  .about-snippet {
+    grid-template-columns: 1fr;
+  }
+
+  .about-snippet img {
+    max-width: 100%;
+  }
+}
+
+/* 🔽 Footer */
+footer {
+  background: white;
+  color: var(--primary);
+  padding: 3rem 1rem 1rem;
+}
+
+.footer-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+footer h3,
+footer h4 {
+  margin-bottom: 1rem;
+}
+
+footer a {
+  color: #000;
+}
+
+footer a:hover {
+  color: var(--primary);
+}
+
+.icons {
+  margin-top: 1rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.icons a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  font-size: 1.6rem;
+  color: #000;
+  border: 2px solid #000;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.icons a:hover {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+  transform: scale(1.1);
+}
+
+/* Mobile Responsive Adjustments */
+@media (max-width: 768px) {
+  .hamburger {
+    display: block;
+  }
+
+  .nav-links.show {
+    left: 0;
+  }
+
+  .dropdown-menu {
+    position: static;
+    background: var(--white);
+    box-shadow: none;
+  }
+
+  .dropdown-menu li a {
+    color: black;
+  }
+
+  .footer-content {
+    text-align: center;
+    justify-items: center;
+  }
+
+  .about-snippet {
+    grid-template-columns: 1fr;
+  }
+
+  .nav-search {
+    width: 100%;
+    text-align: center;
+    margin: 1rem 0 0;
+    max-width: 160px;
+  }
+
+  .nav-search input {
+    width: 90%;
+    max-width: 300px;
+    font-size: 0.75rem;
+    padding: 0.4rem 0.6rem;
+  }
+
+  .infobar {
+    flex-direction: column;
+    align-items: stretch;
+    height: auto;
+    padding: 10px 20px;
+  }
+
+  .infobar-left {
+    order: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .infobar-center {
+    order: 2;
+    width: 100%;
+    margin-top: 10px;
+    color: white;
+  }
+
+  .infobar-right {
+    order: 3;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .infobar-center input {
+    max-width: 500px;
+  }
+}
+
+/* Overlay */
+.mobile-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.4);
+  z-index: 2500;
+}
+
+.mobile-overlay.active {
+  display: block;
+}
+
+/* ===== HERO ===== */
+.hero {
+  position: relative;
+  height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  overflow: hidden;
+
+  /* Parallax background */
+  background-image: url('/'); /* replace with your image */
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed; /* this makes the parallax effect */
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.25); /* overlay */
+  z-index: 1;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  color: #fff; /* change text to white for visibility */
+}
+
+.hero-content h1 {
+  font-size: 2.8rem;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+  color: #222;
+}
+
+.hero-content p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  color: #555;
+  max-width: 650px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hero-content .btn {
+  background: var(--primary);
+  color: #fff;
+  padding: 0.9rem 2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: 0.3s ease;
+}
+
+.hero-content .btn:hover {
+  background: #222;
+}
+
+.hero-image {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.hero-image img {
+  max-width: 100%;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+}
+
+/* 📱 Mobile Nav Sidebar */
+.nav-sidebar {
+  position: fixed;
+  top: 0;
+  left: -300px;
+  width: 250px;
+  height: 100%;
+  background: #fff;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+  padding: 1rem;
+  transition: left 0.3s ease;
+  z-index: 3000;
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-sidebar.open {
+  left: 0;
+}
+
+.nav-sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-sidebar li {
+  margin-bottom: 1rem;
+}
+
+.nav-sidebar a {
+  color: #000;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.close-nav {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: auto;
+  padding: 0.3rem 0.6rem;
+  background: #000;
+  color: #fff;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+
+/* --- Category Bar --- */
+.category-bar {
+  display: flex;
+  flex-wrap: wrap;         /* allows wrapping on small screens */
+  justify-content: center; /* centers them horizontally */
+  gap: 2.5rem;              /* ⬅ increased space between icons */
+  padding: 2rem 1rem;
+  background: #fff;
+  border-bottom: 1px solid #ddd;
+}
+
+.category-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.category {
+  flex: 0 0 auto;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.category:hover {
+  transform: scale(1.05);
+}
+
+.category img {
+  width: 70px;           /* slightly bigger icons */
+  height: 70px;
+  object-fit: contain;
+  border-radius: 50%;
+  background: #f5f5f5;
+  padding: 0.7rem;
+  margin-bottom: 0.5rem;
+}
+
+.category span {
+  display: block;
+  font-size: 1rem;
+  color: #333;
+}
+
+
+.checkout-page {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 1rem;
+  font-family: Arial, sans-serif;
+}
+
+.checkout-section {
+  border: 1px solid #ddd;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.payment-options {
+  display: flex;
+  flex-direction: column;
+}
+
+.payment-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Push icon to far right */
+  padding: 0.5rem;
+  border: 0px solid #ddd;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+
+.payment-option img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  flex-shrink: 0; /* Ensure it doesn’t shrink on smaller screens */
+}
+
+.payment-info span {
+  font-weight: bold;
+}
+
+.payment-info small {
+  display: block;
+  font-size: 0.8rem;
+  color: #555;
+}
+
+.payment-note {
+  font-size: 0.8rem;
+  color: #777;
+  margin-top: 0.5rem;
+}
+
+.order-items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.order-items li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.order-item-img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-right: 0.5rem;
+}
+
+.total {
+  text-align: right;
+  margin-top: 0.5rem;
+  font-size: 1.2rem;
+}
+
+.checkout-actions {
+  text-align: right;
+}
+
+.confirm-btn {
+  background: var(--primary);
+  color: #fff;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.confirm-btn:hover {
+  background: #000000;
+}
+
+
+/* Make the main layout flex */
+.main-layout {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+/* Vertical navbar will have fixed width, page content takes remaining space */
+.page-content {
+  flex: 1;
+}
+
+
+/* 🔒 Standalone Auth Pages (no layout applied) */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f5f5f5, #e0ffe0);
+  padding: 0;
+  margin: 0;
+}
+
+/* Remove top padding for login/register pages */
+body.auth-active {
+  padding-top: 0 !important;
+  background: #fff;
+}
+
+
+
+
+
+
