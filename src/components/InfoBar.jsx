@@ -63,7 +63,7 @@ function InfoBar({ onCartClick, cartCount = 0, categories = [] }) {
   useEffect(() => {
     const delay = setTimeout(() => {
       if (search.trim().length > 1) {
-        fetch(`http://localhost:8000/api/products?search=${encodeURIComponent(search.trim())}`)
+        fetch(`https://original-backend-bcme.onrender.com/api/products?search=${encodeURIComponent(search.trim())}`)
           .then((res) => res.json())
           .then((data) => {
             if (data.success && Array.isArray(data.data?.rows)) {

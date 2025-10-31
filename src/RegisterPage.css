@@ -1,0 +1,130 @@
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: radial-gradient(circle at top, #f3f4f6, #e5e7eb);
+  padding: 2rem;
+}
+
+.register-card {
+  background: #fff;
+  padding: 2.5rem 2rem;
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.register-title {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.register-form .form-group {
+  margin-bottom: 1.2rem;
+  position: relative;
+}
+
+.register-form input {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid #d1d5db;
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.register-form input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+}
+
+.password-field .toggle-password {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #6b7280;
+}
+
+.error-text {
+  color: #ef4444;
+  font-size: 0.85rem;
+  text-align: left;
+  margin-top: 4px;
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 0.9rem;
+  background: linear-gradient(90deg, #2563eb, #3b82f6);
+  color: white;
+  border: none;
+  border-radius: 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:disabled {
+  background: #93c5fd;
+  cursor: not-allowed;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 1.5rem 0;
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.divider span::before,
+.divider span::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid #e5e7eb;
+  margin: 0 1rem;
+}
+
+.social-buttons button {
+  width: 100%;
+  margin-bottom: 0.8rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+  background: white;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.google-btn:hover {
+  background: #f3f4f6;
+}
+
+.facebook-btn:hover {
+  background: #eff6ff;
+}
+
+.auth-switch {
+  margin-top: 1rem;
+  font-size: 0.95rem;
+}
+
+.switch-link {
+  color: #2563eb;
+  cursor: pointer;
+  font-weight: 600;
+}

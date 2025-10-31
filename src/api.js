@@ -3,7 +3,7 @@ import axios from "axios";
 // ✅ Ensure base URL has no trailing slash
 const API_BASE =
   process.env.REACT_APP_API_BASE_URL?.replace(/\/+$/, "") ||
-  "http://localhost:8000";
+  "https://original-backend-bcme.onrender.com";
 
 const API = axios.create({
   baseURL: `${API_BASE}/api`,

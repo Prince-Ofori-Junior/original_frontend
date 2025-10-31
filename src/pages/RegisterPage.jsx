@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "../RegisterPage.css";
 import { FaGoogle, FaFacebookF, FaEye, FaEyeSlash } from "react-icons/fa";
+import { motion } from "framer-motion";
+import toast, { Toaster } from "react-hot-toast";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
+
+  // ✅ Centralized form state
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -12,54 +15,69 @@ const RegisterPage = () => {
     address: "",
     phone: "",
   });
-  const [fieldErrors, setFieldErrors] = useState({});
-  const [generalError, setGeneralError] = useState("");
-  const [success, setSuccess] = useState("");
-  const [loading, setLoading] = useState(false);
+
+  const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [csrfToken, setCsrfToken] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  // ✅ Robust API base for both environments
+  // ✅ Premium: Use environment variable with safe fallback
   const API_BASE =
     (process.env.REACT_APP_API_BASE_URL &&
       process.env.REACT_APP_API_BASE_URL.replace(/\/+$/, "")) ||
     (process.env.NODE_ENV === "production"
-      ? "https://original-backend-8b5r.onrender.com"
-      : "https://original-backend-8b5r.onrender.com");
+      ? "https://original-backend-bcme.onrender.com"
+      : "http://localhost:8000");
 
-  // ✅ Fetch CSRF token safely
+  // ✅ Fetch CSRF Token on load
   useEffect(() => {
     const fetchCsrf = async () => {
       try {
         const res = await fetch(`${API_BASE}/csrf-token`, {
-          credentials: "include", // ensures cookies are sent
+          credentials: "include",
         });
         if (!res.ok) throw new Error("Failed to fetch CSRF token");
         const data = await res.json();
         setCsrfToken(data.csrfToken);
-        console.log("✅ CSRF token loaded");
       } catch (err) {
-        console.warn("⚠️ CSRF token fetch skipped:", err.message);
+        console.warn("⚠️ Could not load CSRF token:", err.message);
       }
     };
     fetchCsrf();
   }, [API_BASE]);
 
-  // ✅ Form change handler
+  // ✅ Input change handler with real-time validation
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-    setFieldErrors((prev) => ({ ...prev, [e.target.name]: "" }));
-    setGeneralError("");
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
-  // ✅ Form submit handler
+  // ✅ Basic client-side validation
+  const validateForm = () => {
+    const newErrors = {};
+    if (!form.name.trim()) newErrors.name = "Full name is required";
+    if (!form.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/))
+      newErrors.email = "Enter a valid email address";
+    if (form.password.length < 6)
+      newErrors.password = "Password must be at least 6 characters";
+    if (!form.phone.match(/^[0-9]{10,15}$/))
+      newErrors.phone = "Enter a valid phone number (10–15 digits)";
+    return newErrors;
+  };
+
+  // ✅ Submit form
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setGeneralError("");
-    setFieldErrors({});
-    setSuccess("");
-    setLoading(true);
+    setErrors({});
+    const validationErrors = validateForm();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      toast.error("Please correct the highlighted fields");
+      return;
+    }
 
+    setLoading(true);
     try {
       const res = await fetch(`${API_BASE}/api/auth/register`, {
         method: "POST",
@@ -74,39 +92,37 @@ const RegisterPage = () => {
       const data = await res.json();
 
       if (!res.ok) {
-        const errorsObj = {};
-        let generalMsg = "";
-
         if (data.errors && Array.isArray(data.errors)) {
+          const serverErrors = {};
           data.errors.forEach((err) => {
-            if (err.param) errorsObj[err.param] = err.message;
-            else generalMsg = err.message || generalMsg;
+            if (err.param) serverErrors[err.param] = err.message;
           });
+          setErrors(serverErrors);
         }
-
-        setFieldErrors(errorsObj);
-        throw new Error(generalMsg || data.message || "Registration failed. Please try again.");
+        throw new Error(data.message || "Registration failed. Try again.");
       }
 
       localStorage.setItem("token", data.data?.accessToken || "");
-      setSuccess("🎉 Registration successful! Redirecting to login...");
-      setTimeout(() => navigate("/login"), 2000);
+      toast.success("🎉 Registration successful! Redirecting...");
+      setTimeout(() => navigate("/login"), 1800);
     } catch (err) {
-      setGeneralError(err.message || "Unexpected error occurred");
+      toast.error(err.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="login-page">
-      <div className="login-card">
-        <h2>Create Account</h2>
-
-        {generalError && <p className="error-message">{generalError}</p>}
-        {success && <p className="success-message">{success}</p>}
-
-        <form onSubmit={handleSubmit} className="login-form" autoComplete="on">
+    <div className="register-container">
+      <Toaster position="top-center" />
+      <motion.div
+        className="register-card"
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
+        <h2 className="register-title">Create an Account</h2>
+        <form className="register-form" onSubmit={handleSubmit} autoComplete="on">
           <div className="form-group">
             <input
               type="text"
@@ -114,89 +130,100 @@ const RegisterPage = () => {
               placeholder="Full Name"
               value={form.name}
               onChange={handleChange}
-              required
               autoComplete="name"
+              disabled={loading}
             />
-            {fieldErrors.name && <p className="error-message">{fieldErrors.name}</p>}
+            {errors.name && <p className="error-text">{errors.name}</p>}
           </div>
 
           <div className="form-group">
             <input
               type="email"
               name="email"
-              placeholder="Email"
+              placeholder="Email Address"
               value={form.email}
               onChange={handleChange}
-              required
               autoComplete="email"
+              disabled={loading}
             />
-            {fieldErrors.email && <p className="error-message">{fieldErrors.email}</p>}
+            {errors.email && <p className="error-text">{errors.email}</p>}
           </div>
 
           <div className="form-group">
             <input
               type="text"
               name="address"
-              placeholder="Address (eg. Region, City, Street, Zip, etc)"
+              placeholder="Address (City, Region, etc)"
               value={form.address}
               onChange={handleChange}
               autoComplete="street-address"
+              disabled={loading}
             />
-            {fieldErrors.address && <p className="error-message">{fieldErrors.address}</p>}
+            {errors.address && <p className="error-text">{errors.address}</p>}
           </div>
 
           <div className="form-group">
             <input
               type="tel"
               name="phone"
-              placeholder="Phone"
+              placeholder="Phone Number"
               value={form.phone}
               onChange={handleChange}
               autoComplete="tel"
+              disabled={loading}
             />
-            {fieldErrors.phone && <p className="error-message">{fieldErrors.phone}</p>}
+            {errors.phone && <p className="error-text">{errors.phone}</p>}
           </div>
 
-          <div className="form-group password-wrapper">
+          <div className="form-group password-field">
             <input
               type={showPassword ? "text" : "password"}
               name="password"
               placeholder="Password"
               value={form.password}
               onChange={handleChange}
-              required
-              minLength={6}
               autoComplete="new-password"
+              disabled={loading}
             />
-            <span className="toggle-password" onClick={() => setShowPassword(!showPassword)}>
+            <span
+              className="toggle-password"
+              onClick={() => setShowPassword((prev) => !prev)}
+            >
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </span>
-            {fieldErrors.password && <p className="error-message">{fieldErrors.password}</p>}
+            {errors.password && <p className="error-text">{errors.password}</p>}
           </div>
 
-          <button type="submit" className="btn-primary" disabled={loading || !csrfToken}>
-            {loading ? "Registering..." : csrfToken ? "Register" : "Loading..."}
-          </button>
+          <motion.button
+            type="submit"
+            className="btn-primary"
+            disabled={loading || !csrfToken}
+            whileTap={{ scale: 0.96 }}
+          >
+            {loading ? "Registering..." : csrfToken ? "Sign Up" : "Loading..."}
+          </motion.button>
         </form>
 
-        <div className="divider"><span>or</span></div>
+        <div className="divider">
+          <span>OR</span>
+        </div>
 
-        <div className="social-login">
+        <div className="social-buttons">
           <button className="google-btn" type="button">
-            <FaGoogle className="icon" /> Sign up with Google
+            <FaGoogle /> Sign up with Google
           </button>
           <button className="facebook-btn" type="button">
-            <FaFacebookF className="icon" /> Sign up with Facebook
+            <FaFacebookF /> Sign up with Facebook
           </button>
         </div>
 
-        <p className="auth-switch-text">
+        <p className="auth-switch">
           Already have an account?{" "}
-          <span className="auth-switch-link" onClick={() => navigate("/login")}>
+          <span onClick={() => navigate("/login")} className="switch-link">
             Login here
           </span>
         </p>
-      </div>
+      </motion.div>
     </div>
   );
 };
