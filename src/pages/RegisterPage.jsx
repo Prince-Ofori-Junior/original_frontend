@@ -3,13 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { FaGoogle, FaFacebookF, FaEye, FaEyeSlash } from "react-icons/fa";
 import { motion } from "framer-motion";
 import toast, { Toaster } from "react-hot-toast";
-import { parsePhoneNumberFromString } from "libphonenumber-js"; // ✅ Added
+import { parsePhoneNumberFromString } from "libphonenumber-js"; // ✅
 import "../RegisterPage.css";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
 
-  // ✅ Centralized form state
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -22,14 +21,40 @@ const RegisterPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [csrfToken, setCsrfToken] = useState("");
   const [loading, setLoading] = useState(false);
+  const [userCountry, setUserCountry] = useState("GB"); // ✅ Default fallback UK
 
-  // ✅ Premium: Use environment variable with safe fallback
   const API_BASE =
     (process.env.REACT_APP_API_BASE_URL &&
       process.env.REACT_APP_API_BASE_URL.replace(/\/+$/, "")) ||
     (process.env.NODE_ENV === "production"
       ? "https://original-backend-bcme.onrender.com"
       : "http://localhost:8000");
+
+  // ✅ Detect user country from browser locale or IP
+  useEffect(() => {
+    const detectCountry = async () => {
+      try {
+        // Try browser locale first
+        const locale = Intl.DateTimeFormat().resolvedOptions().locale;
+        const regionMatch = locale.match(/-([A-Z]{2})$/);
+        if (regionMatch) {
+          setUserCountry(regionMatch[1]);
+          return;
+        }
+
+        // Fallback to IP-based lookup
+        const res = await fetch("https://ipapi.co/json/");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.country_code) setUserCountry(data.country_code);
+        }
+      } catch (err) {
+        console.warn("⚠️ Country detection failed:", err.message);
+        setUserCountry("GB"); // Default UK
+      }
+    };
+    detectCountry();
+  }, []);
 
   // ✅ Fetch CSRF Token on load
   useEffect(() => {
@@ -48,38 +73,39 @@ const RegisterPage = () => {
     fetchCsrf();
   }, [API_BASE]);
 
-  // ✅ Input change handler with real-time validation
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
     setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
-  // ✅ Auto-detect and format any phone number to international (+country code)
+  // ✅ Auto-detect and format any phone number to correct country
   const formatPhoneNumber = (phone) => {
     try {
       if (!phone) return "";
       const cleaned = phone.trim();
-
-      // Try parsing with auto-detect (default fallback "GH" Ghana)
-      const parsed = parsePhoneNumberFromString(cleaned, "GH");
+      const parsed = parsePhoneNumberFromString(cleaned, userCountry);
 
       if (parsed && parsed.isValid()) {
-        return parsed.number; // standardized E.164 format (+233...)
+        return parsed.number; // standardized E.164 format (+44..., +233..., etc.)
       }
 
-      // Fallback manual cleanup
+      // Manual fallback formatting
       const fallback = cleaned.replace(/[\s()-]/g, "");
       if (fallback.startsWith("+")) return fallback;
-      if (fallback.startsWith("0")) return "+233" + fallback.slice(1);
-      return "+233" + fallback;
+
+      if (fallback.startsWith("0")) {
+        if (userCountry === "GH") return "+233" + fallback.slice(1);
+        if (userCountry === "GB") return "+44" + fallback.slice(1);
+        if (userCountry === "US") return "+1" + fallback.slice(1);
+      }
+      return "+" + fallback;
     } catch (error) {
       console.warn("Phone formatting error:", error.message);
       return phone;
     }
   };
 
-  // ✅ Basic client-side validation
   const validateForm = () => {
     const newErrors = {};
     if (!form.name.trim()) newErrors.name = "Full name is required";
@@ -92,7 +118,6 @@ const RegisterPage = () => {
     return newErrors;
   };
 
-  // ✅ Submit form
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
@@ -105,7 +130,7 @@ const RegisterPage = () => {
 
     setLoading(true);
     try {
-      const formattedPhone = formatPhoneNumber(form.phone); // ✅ Auto-format before sending
+      const formattedPhone = formatPhoneNumber(form.phone);
 
       const res = await fetch(`${API_BASE}/api/auth/register`, {
         method: "POST",
@@ -114,7 +139,7 @@ const RegisterPage = () => {
           "Content-Type": "application/json",
           ...(csrfToken ? { "X-CSRF-Token": csrfToken } : {}),
         },
-        body: JSON.stringify({ ...form, phone: formattedPhone }), // ✅ fixed line
+        body: JSON.stringify({ ...form, phone: formattedPhone }),
       });
 
       const data = await res.json();
