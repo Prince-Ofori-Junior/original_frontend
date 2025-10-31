@@ -79,32 +79,40 @@ const RegisterPage = () => {
     setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
-  // ✅ Auto-detect and format any phone number to correct country
-  const formatPhoneNumber = (phone) => {
-    try {
-      if (!phone) return "";
-      const cleaned = phone.trim();
-      const parsed = parsePhoneNumberFromString(cleaned, userCountry);
+  // ✅ Auto-detect and correctly format any phone number
+const formatPhoneNumber = (phone) => {
+  try {
+    if (!phone) return "";
 
-      if (parsed && parsed.isValid()) {
-        return parsed.number; // standardized E.164 format (+44..., +233..., etc.)
-      }
+    const cleaned = phone.trim().replace(/[\s()-]/g, "");
 
-      // Manual fallback formatting
-      const fallback = cleaned.replace(/[\s()-]/g, "");
-      if (fallback.startsWith("+")) return fallback;
+    // ✅ Default Ghana fallback
+    const fallbackCountry = "GH";
+    const region = userCountry || fallbackCountry;
 
-      if (fallback.startsWith("0")) {
-        if (userCountry === "GH") return "+233" + fallback.slice(1);
-        if (userCountry === "GB") return "+44" + fallback.slice(1);
-        if (userCountry === "US") return "+1" + fallback.slice(1);
-      }
-      return "+" + fallback;
-    } catch (error) {
-      console.warn("Phone formatting error:", error.message);
-      return phone;
+    // Parse using libphonenumber-js
+    const parsed = parsePhoneNumberFromString(cleaned, region);
+
+    if (parsed && parsed.isValid()) {
+      return parsed.number; // standardized E.164 format (+233..., +44..., etc.)
     }
-  };
+
+    // ✅ Manual fallback logic — correctly handle Ghana and others
+    if (cleaned.startsWith("+")) return cleaned;
+
+    if (cleaned.startsWith("0")) {
+      if (region === "GH" || !region) return "+233" + cleaned.slice(1);
+      if (region === "GB") return "+44" + cleaned.slice(1);
+      if (region === "US") return "+1" + cleaned.slice(1);
+    }
+
+    // Default to Ghana if we can't tell
+    return "+233" + cleaned.replace(/^0+/, "");
+  } catch (error) {
+    console.warn("Phone formatting error:", error.message);
+    return phone;
+  }
+};
 
   const validateForm = () => {
     const newErrors = {};
