@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FaGoogle, FaFacebookF, FaEye, FaEyeSlash } from "react-icons/fa";
 import { motion } from "framer-motion";
 import toast, { Toaster } from "react-hot-toast";
+import "../RegisterPage.css"
 
 const RegisterPage = () => {
   const navigate = useNavigate();
