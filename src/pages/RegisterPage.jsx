@@ -79,27 +79,35 @@ const RegisterPage = () => {
     setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
-  // ✅ Auto-detect country + override if the number looks Ghanaian
+  // ✅ Smart international phone auto-detector with Ghana + UK overrides
 const formatPhoneNumber = (phone) => {
   try {
     if (!phone) return "";
 
     const cleaned = phone.trim().replace(/[\s()-]/g, "");
+
+    // ✅ Fallback country
     const fallbackCountry = "GH";
     const region = userCountry || fallbackCountry;
 
-    // ✅ Ghana pattern override
+    // ✅ Ghana pattern (02, 03, 05, 0 + 9 more digits)
     const ghanaPattern = /^(?:0(?:2|3|5)\d{8})$/;
 
-    // If Ghana number format, force GH
-    const countryToUse = ghanaPattern.test(cleaned) ? "GH" : region;
+    // ✅ UK pattern (07 + 9 digits)
+    const ukPattern = /^07\d{9}$/;
+
+    // ✅ Auto select correct region
+    let countryToUse = region;
+    if (ghanaPattern.test(cleaned)) countryToUse = "GH";
+    else if (ukPattern.test(cleaned)) countryToUse = "GB";
 
     const parsed = parsePhoneNumberFromString(cleaned, countryToUse);
+
     if (parsed && parsed.isValid()) {
-      return parsed.number;
+      return parsed.number; // standardized E.164 (+233..., +44..., etc.)
     }
 
-    // ✅ Manual fallback logic
+    // ✅ Manual fallback formatting
     if (cleaned.startsWith("+")) return cleaned;
     if (cleaned.startsWith("0")) {
       if (countryToUse === "GH") return "+233" + cleaned.slice(1);
@@ -107,7 +115,8 @@ const formatPhoneNumber = (phone) => {
       if (countryToUse === "US") return "+1" + cleaned.slice(1);
     }
 
-    return "+233" + cleaned.replace(/^0+/, ""); // fallback Ghana default
+    // ✅ Default Ghana fallback
+    return "+233" + cleaned.replace(/^0+/, "");
   } catch (error) {
     console.warn("Phone formatting error:", error.message);
     return phone;
