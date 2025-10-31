@@ -151,7 +151,7 @@ function App() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch("https://original-backend-bcme.onrender.com/api/products/categories/list");
+        const response = await fetch("http://localhost:8000/api/products/categories/list");
         const data = await response.json();
         if (data.success && Array.isArray(data.data)) {
           setCategories(data.data);

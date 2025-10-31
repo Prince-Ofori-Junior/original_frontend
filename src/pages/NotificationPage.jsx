@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaBell, FaArrowLeft } from "react-icons/fa";
 import "../NotificationPage.css";
 
-const API_ROOT = process.env.REACT_APP_API_URL || "http://localhost:8000/api";
+const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:8000/api";
 
 const NotificationsPage = () => {
   const [notifications, setNotifications] = useState([]);
@@ -25,7 +25,7 @@ const NotificationsPage = () => {
           return;
         }
 
-        const res = await fetch(`${API_ROOT}/notifications`, {
+        const res = await fetch(`${API_BASE}/notifications`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -89,7 +89,7 @@ const NotificationsPage = () => {
     if (!token) return;
 
     try {
-      const res = await fetch(`${API_ROOT}/notifications/${id}/read`, {
+      const res = await fetch(`${API_BASE}/notifications/${id}/read`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -161,4 +161,3 @@ const NotificationsPage = () => {
 };
 
 export default NotificationsPage;
- 
