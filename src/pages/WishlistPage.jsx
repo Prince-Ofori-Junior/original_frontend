@@ -6,6 +6,7 @@ import "../WishlistPage.css";
 function WishlistPage({ addToCart }) {
   const [wishlist, setWishlist] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [sortByPrice, setSortByPrice] = useState(false);
   const navigate = useNavigate();
 
   // Fetch wishlist for logged-in user
@@ -53,7 +54,7 @@ function WishlistPage({ addToCart }) {
 
       const res = await API.delete("/wishlist", {
         headers: { Authorization: `Bearer ${token}` },
-        params: { productId }, // use params for query string
+        params: { productId },
       });
 
       if (res.data?.success) {
@@ -77,6 +78,22 @@ function WishlistPage({ addToCart }) {
     }
   };
 
+  // Clear all (visual only)
+  const handleClearAll = () => {
+    setWishlist([]);
+  };
+
+  // Sort by price (visual only)
+  const handleSortByPrice = () => {
+    const sorted = [...wishlist].sort((a, b) =>
+      sortByPrice
+        ? a.price - b.price
+        : b.price - a.price
+    );
+    setWishlist(sorted);
+    setSortByPrice(!sortByPrice);
+  };
+
   if (loading) {
     return (
       <div className="wishlist-loading">
@@ -89,6 +106,17 @@ function WishlistPage({ addToCart }) {
   return (
     <div className="wishlist-container">
       <h2 className="wishlist-title">❤️ Your Saved Items</h2>
+
+      {wishlist.length > 0 && (
+        <div className="wishlist-toolbar">
+          <button onClick={handleClearAll} className="toolbar-btn clear-btn">
+            🧹 Clear All
+          </button>
+          <button onClick={handleSortByPrice} className="toolbar-btn sort-btn">
+            💲 Sort by Price {sortByPrice ? "↓" : "↑"}
+          </button>
+        </div>
+      )}
 
       {wishlist.length === 0 ? (
         <div className="empty-wishlist">

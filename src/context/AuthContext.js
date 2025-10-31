@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   const API_BASE_URL =
-    (process.env.REACT_APP_API_BASE_URL || API.defaults.baseURL || "https://original-backend-8b5r.onrender.com").replace(/\/+$/, "");
+    (process.env.REACT_APP_API_BASE_URL || API.defaults.baseURL || "https://original-backend-bcme.onrender.com").replace(/\/+$/, "");
 
   // -------------------- Normalize avatar URL --------------------
   const normalizeAvatar = useCallback(
