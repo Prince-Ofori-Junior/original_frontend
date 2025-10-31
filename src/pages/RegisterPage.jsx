@@ -79,35 +79,35 @@ const RegisterPage = () => {
     setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
-  // ✅ Auto-detect and correctly format any phone number
+  // ✅ Auto-detect country + override if the number looks Ghanaian
 const formatPhoneNumber = (phone) => {
   try {
     if (!phone) return "";
 
     const cleaned = phone.trim().replace(/[\s()-]/g, "");
-
-    // ✅ Default Ghana fallback
     const fallbackCountry = "GH";
     const region = userCountry || fallbackCountry;
 
-    // Parse using libphonenumber-js
-    const parsed = parsePhoneNumberFromString(cleaned, region);
+    // ✅ Ghana pattern override
+    const ghanaPattern = /^(?:0(?:2|3|5)\d{8})$/;
 
+    // If Ghana number format, force GH
+    const countryToUse = ghanaPattern.test(cleaned) ? "GH" : region;
+
+    const parsed = parsePhoneNumberFromString(cleaned, countryToUse);
     if (parsed && parsed.isValid()) {
-      return parsed.number; // standardized E.164 format (+233..., +44..., etc.)
+      return parsed.number;
     }
 
-    // ✅ Manual fallback logic — correctly handle Ghana and others
+    // ✅ Manual fallback logic
     if (cleaned.startsWith("+")) return cleaned;
-
     if (cleaned.startsWith("0")) {
-      if (region === "GH" || !region) return "+233" + cleaned.slice(1);
-      if (region === "GB") return "+44" + cleaned.slice(1);
-      if (region === "US") return "+1" + cleaned.slice(1);
+      if (countryToUse === "GH") return "+233" + cleaned.slice(1);
+      if (countryToUse === "GB") return "+44" + cleaned.slice(1);
+      if (countryToUse === "US") return "+1" + cleaned.slice(1);
     }
 
-    // Default to Ghana if we can't tell
-    return "+233" + cleaned.replace(/^0+/, "");
+    return "+233" + cleaned.replace(/^0+/, ""); // fallback Ghana default
   } catch (error) {
     console.warn("Phone formatting error:", error.message);
     return phone;
