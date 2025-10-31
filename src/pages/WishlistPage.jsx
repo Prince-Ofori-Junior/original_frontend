@@ -9,7 +9,6 @@ function WishlistPage({ addToCart }) {
   const [sortByPrice, setSortByPrice] = useState(false);
   const navigate = useNavigate();
 
-  // Fetch wishlist for logged-in user
   const fetchWishlist = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -17,18 +16,15 @@ function WishlistPage({ addToCart }) {
         navigate("/login");
         return;
       }
-
       const res = await API.get("/wishlist", {
         headers: { Authorization: `Bearer ${token}` },
       });
-
       const items = res.data?.wishlist || [];
       const normalized = items.map((item) => ({
         ...item,
         price: item.price ?? 0,
         discountPrice: item.discountPrice ?? item.discount_price ?? null,
       }));
-
       setWishlist(normalized);
     } catch (err) {
       console.error("❌ Failed to fetch wishlist:", err.response?.data || err.message);
@@ -41,16 +37,10 @@ function WishlistPage({ addToCart }) {
     fetchWishlist();
   }, []);
 
-  // Remove a product from wishlist
   const removeFromWishlist = async (productId) => {
     try {
       const token = localStorage.getItem("token");
       if (!token) return navigate("/login");
-
-      if (!productId || typeof productId !== "string") {
-        console.error("❌ Cannot remove wishlist item: invalid productId", productId);
-        return;
-      }
 
       const res = await API.delete("/wishlist", {
         headers: { Authorization: `Bearer ${token}` },
@@ -59,36 +49,16 @@ function WishlistPage({ addToCart }) {
 
       if (res.data?.success) {
         setWishlist((prev) => prev.filter((item) => item.product_id !== productId));
-        console.log(`✅ Removed product ${productId} from wishlist`);
-      } else {
-        console.warn(`⚠️ Could not remove product ${productId}:`, res.data);
       }
     } catch (err) {
-      const status = err.response?.status;
-      const data = err.response?.data;
-
-      if (status === 400) {
-        console.error(`❌ Bad Request: Product ID missing or invalid`, data);
-      } else if (status === 404) {
-        console.warn(`⚠️ Not Found: Product not in wishlist, removing from UI anyway`, data);
-        setWishlist((prev) => prev.filter((item) => item.product_id !== productId));
-      } else {
-        console.error("❌ Failed to remove from wishlist:", data || err.message);
-      }
+      console.error("❌ Failed to remove:", err.response?.data || err.message);
     }
   };
 
-  // Clear all (visual only)
-  const handleClearAll = () => {
-    setWishlist([]);
-  };
-
-  // Sort by price (visual only)
+  const handleClearAll = () => setWishlist([]);
   const handleSortByPrice = () => {
     const sorted = [...wishlist].sort((a, b) =>
-      sortByPrice
-        ? a.price - b.price
-        : b.price - a.price
+      sortByPrice ? a.price - b.price : b.price - a.price
     );
     setWishlist(sorted);
     setSortByPrice(!sortByPrice);
@@ -105,10 +75,10 @@ function WishlistPage({ addToCart }) {
 
   return (
     <div className="wishlist-container">
-      <h2 className="wishlist-title">❤️ Your Saved Items</h2>
+      <h2 className="wishlist-title">❤️ Your Wishlist</h2>
 
       {wishlist.length > 0 && (
-        <div className="wishlist-toolbar">
+        <div className="wishlist-toolbar glassy-toolbar">
           <button onClick={handleClearAll} className="toolbar-btn clear-btn">
             🧹 Clear All
           </button>
@@ -122,27 +92,27 @@ function WishlistPage({ addToCart }) {
         <div className="empty-wishlist">
           <img src="/empty-heart.svg" alt="Empty Wishlist" />
           <h3>No saved items yet</h3>
-          <p>Browse products and tap the ❤️ icon to save your favorites.</p>
-          <Link to="/shop" className="browse-btn">
-            Browse Products
-          </Link>
+          <p>Browse products and tap ❤️ to save your favorites.</p>
+          <Link to="/shop" className="browse-btn">Browse Products</Link>
         </div>
       ) : (
         <div className="wishlist-grid">
           {wishlist.map((item) => {
             const productId = item.product_id;
             const price = item.discountPrice ?? item.price;
-
             return (
               <div className="wishlist-card" key={productId}>
-                <img
-                  src={item.image_url || "/placeholder.png"}
-                  alt={item.name}
-                  className="wishlist-img"
-                  onError={(e) => (e.target.src = "/placeholder.png")}
-                />
+                <div className="wishlist-image-wrapper">
+                  <img
+                    src={item.image_url || "/placeholder.png"}
+                    alt={item.name}
+                    className="wishlist-img"
+                    onError={(e) => (e.target.src = "/placeholder.png")}
+                  />
+                  <div className="wishlist-overlay"></div>
+                </div>
                 <div className="wishlist-info">
-                  <h3 className="wishlist-name">{item.name}</h3>
+                  <h3>{item.name}</h3>
                   <p className="wishlist-price">GHS {Number(price).toFixed(2)}</p>
                 </div>
                 <div className="wishlist-actions">
