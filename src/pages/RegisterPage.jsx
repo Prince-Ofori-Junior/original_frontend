@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { FaGoogle, FaFacebookF, FaEye, FaEyeSlash } from "react-icons/fa";
 import { motion } from "framer-motion";
 import toast, { Toaster } from "react-hot-toast";
-import "../RegisterPage.css"
+import { parsePhoneNumberFromString } from "libphonenumber-js"; // ✅ Added
+import "../RegisterPage.css";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -54,6 +55,30 @@ const RegisterPage = () => {
     setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
+  // ✅ Auto-detect and format any phone number to international (+country code)
+  const formatPhoneNumber = (phone) => {
+    try {
+      if (!phone) return "";
+      const cleaned = phone.trim();
+
+      // Try parsing with auto-detect (default fallback "GH" Ghana)
+      const parsed = parsePhoneNumberFromString(cleaned, "GH");
+
+      if (parsed && parsed.isValid()) {
+        return parsed.number; // standardized E.164 format (+233...)
+      }
+
+      // Fallback manual cleanup
+      const fallback = cleaned.replace(/[\s()-]/g, "");
+      if (fallback.startsWith("+")) return fallback;
+      if (fallback.startsWith("0")) return "+233" + fallback.slice(1);
+      return "+233" + fallback;
+    } catch (error) {
+      console.warn("Phone formatting error:", error.message);
+      return phone;
+    }
+  };
+
   // ✅ Basic client-side validation
   const validateForm = () => {
     const newErrors = {};
@@ -62,7 +87,7 @@ const RegisterPage = () => {
       newErrors.email = "Enter a valid email address";
     if (form.password.length < 6)
       newErrors.password = "Password must be at least 6 characters";
-    if (!form.phone.match(/^[0-9]{10,15}$/))
+    if (!form.phone.match(/^[0-9+]{10,15}$/))
       newErrors.phone = "Enter a valid phone number (10–15 digits)";
     return newErrors;
   };
@@ -80,6 +105,8 @@ const RegisterPage = () => {
 
     setLoading(true);
     try {
+      const formattedPhone = formatPhoneNumber(form.phone); // ✅ Auto-format before sending
+
       const res = await fetch(`${API_BASE}/api/auth/register`, {
         method: "POST",
         credentials: "include",
@@ -87,7 +114,7 @@ const RegisterPage = () => {
           "Content-Type": "application/json",
           ...(csrfToken ? { "X-CSRF-Token": csrfToken } : {}),
         },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, phone: formattedPhone }), // ✅ fixed line
       });
 
       const data = await res.json();
