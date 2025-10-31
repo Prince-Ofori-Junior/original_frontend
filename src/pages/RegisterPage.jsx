@@ -123,17 +123,40 @@ const formatPhoneNumber = (phone) => {
   }
 };
 
-  const validateForm = () => {
-    const newErrors = {};
-    if (!form.name.trim()) newErrors.name = "Full name is required";
-    if (!form.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/))
-      newErrors.email = "Enter a valid email address";
-    if (form.password.length < 6)
-      newErrors.password = "Password must be at least 6 characters";
-    if (!form.phone.match(/^[0-9+]{10,15}$/))
-      newErrors.phone = "Enter a valid phone number (10–15 digits)";
-    return newErrors;
-  };
+ const validateForm = () => {
+  const newErrors = {};
+
+  // ✅ Full Name: Only letters, spaces, apostrophes, hyphens, and at least 2 characters
+  if (!/^[A-Za-z\s'-]{2,60}$/.test(form.name.trim()))
+    newErrors.name = "Enter a valid full name (letters only)";
+
+  // ✅ Email: RFC 5322 global standard
+  if (
+    !/^(?:[a-zA-Z0-9_'^&+/=?!{}~-]+(?:\.[a-zA-Z0-9_'^&+/=?!{}~-]+)*|"[^"]+")@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,63}$/.test(
+      form.email.trim()
+    )
+  )
+    newErrors.email = "Enter a valid email address";
+
+  // ✅ Password: At least 8 chars, with upper, lower, number, and special char
+  if (
+    !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.#^()[\]{}_-])[A-Za-z\d@$!%*?&.#^()[\]{}_-]{8,}$/.test(
+      form.password
+    )
+  )
+    newErrors.password =
+      "Password must be 8+ chars with upper, lower, number, and symbol";
+
+  // ✅ Address: Allow alphanumeric, commas, periods, hyphens, spaces — at least 5 chars
+  if (!/^[A-Za-z0-9\s,.'-]{5,100}$/.test(form.address.trim()))
+    newErrors.address = "Enter a valid address (letters/numbers only)";
+
+  // ✅ Phone: Basic numeric validation (10–15 digits)
+  if (!form.phone.match(/^[0-9+]{10,15}$/))
+    newErrors.phone = "Enter a valid phone number (10–15 digits)";
+
+  return newErrors;
+};
 
   const handleSubmit = async (e) => {
     e.preventDefault();
